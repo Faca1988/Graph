@@ -1,0 +1,23 @@
+# depslib dependency file v1.0
+1544628169 source:c:\users\fnc-dev\dropbox\isft 151\investigacion operativa\graphv3\main.cpp
+	<iostream>
+	"graph.h"
+
+1544663190 c:\users\fnc-dev\dropbox\isft 151\investigacion operativa\graphv3\graph.h
+	"list.h"
+
+1544546970 c:\users\fnc-dev\dropbox\isft 151\investigacion operativa\graphv3\list.h
+	<vector>
+	<string>
+
+1544846046 source:c:\users\fc-dev\dropbox\isft 151\investigacion operativa\graphv3\main.cpp
+	<iostream>
+	"graph.h"
+
+1544845939 c:\users\fc-dev\dropbox\isft 151\investigacion operativa\graphv3\graph.h
+	"list.h"
+
+1544845847 c:\users\fc-dev\dropbox\isft 151\investigacion operativa\graphv3\list.h
+	<vector>
+	<string>
+
