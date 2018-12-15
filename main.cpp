@@ -57,6 +57,17 @@ int main()
         cout << "Peso: " << arista->weigth << endl << endl;
     };
 
+
+    /// ================ EL GRAFO ES CONEXO? ======================
+    if (graph->IsItConnected())
+    {
+        cout << "EL grafo es conexo" << endl;
+    }
+    else
+    {
+        cout << "EL grafo NO es conexo" << endl;
+    };
+
     /// MUESTRO LAS ARISTAS INGRESADAS EN LA LISTA DE CONEXIONES DEL NODO ELEGIDO
     cout << "Ingrese un nodo para ver sus conexiones:" << endl;
     string nodoSeleccinado;
@@ -107,6 +118,113 @@ int main()
     }
 
     graph->DelEdge(targetEdge);
+
+
+    /// ================ EL GRAFO ES CONEXO? ======================
+    if (graph->IsItConnected())
+    {
+        cout << "EL grafo es conexo" << endl;
+    }
+    else
+    {
+        cout << "EL grafo NO es conexo" << endl;
+    };
+
+
+
+    /// ================ MUESTRO LAS ARISTAS INGRESADOS ======================
+
+    for (int pos = 0; pos < graph->AmountOfEdges(); pos++)
+    {
+        arista = graph->GetEdge(pos);
+        cout << "Arista en la pos: " << pos << endl;
+        cout << "Nodo A: " << arista->nodeA->label << endl;
+        cout << "Nodo B: " << arista->nodeB->label << endl;
+        cout << "Peso: " << arista->weigth << endl << endl;
+    };
+
+    posConn = 0;
+    tamano = nodo->connections.GetSize();
+    while ( posConn < tamano)
+    {
+        arista = nodo->connections.GetItem(posConn);
+        Node* pA = arista->nodeA;
+        Node* pB = arista->nodeB;
+
+        string labelA = pA->label;
+        string labelB = pB->label;
+
+        cout << "Conexion: " << posConn << endl;
+        cout << labelA << " " << labelB << " " << arista->weigth << endl;
+
+        posConn++;
+    };
+
+
+
+/// ======================== BORRO UNA ARISTA ===============================
+    cout << "Ingrese los nodos de la arista a borrar: " << endl;
+    cout << "Ingrese el primer nodo: ";
+    cin >> nodoX;
+    cout << endl << "Ingrese el segundo nodo: ";
+    cin >> nodoY;
+    cout << endl;
+
+    //Edge* targetEdge;
+    // busco la arista
+    for (int pos = 0; pos < graph->AmountOfEdges(); pos++)
+    {
+        Node* nA = graph->GetEdge(pos)->nodeA;
+        Node* nB = graph->GetEdge(pos)->nodeB;
+        if ( (nA->label == nodoX && nB->label == nodoY) || (nB->label == nodoX && nA->label == nodoY) )
+        {
+            targetEdge = graph->GetEdge(pos);
+        }
+    }
+
+    graph->DelEdge(targetEdge);
+
+
+    /// ================ EL GRAFO ES CONEXO? ======================
+    if (graph->IsItConnected())
+    {
+        cout << "EL grafo es conexo" << endl;
+    }
+    else
+    {
+        cout << "EL grafo NO es conexo" << endl;
+    };
+
+
+
+    /// ================ MUESTRO LAS ARISTAS INGRESADOS ======================
+
+    for (int pos = 0; pos < graph->AmountOfEdges(); pos++)
+    {
+        arista = graph->GetEdge(pos);
+        cout << "Arista en la pos: " << pos << endl;
+        cout << "Nodo A: " << arista->nodeA->label << endl;
+        cout << "Nodo B: " << arista->nodeB->label << endl;
+        cout << "Peso: " << arista->weigth << endl << endl;
+    };
+
+    posConn = 0;
+    tamano = nodo->connections.GetSize();
+    while ( posConn < tamano)
+    {
+        arista = nodo->connections.GetItem(posConn);
+        Node* pA = arista->nodeA;
+        Node* pB = arista->nodeB;
+
+        string labelA = pA->label;
+        string labelB = pB->label;
+
+        cout << "Conexion: " << posConn << endl;
+        cout << labelA << " " << labelB << " " << arista->weigth << endl;
+
+        posConn++;
+    };
+
 
     return 0;
 }

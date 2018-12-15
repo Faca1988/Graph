@@ -59,7 +59,7 @@ public:
     void DelEdge(Node* pA, Node* pB);
 
     bool IsItMultiGraph();          /// PENDIENTE
-    bool IsItConnected();           /// PENDIENTE
+    bool IsItConnected();
     bool IsItCyclical();            /// PENDIENTE
     Graph SplitGrapgh();            /// PENDIENTE
     void MergeGraph(Graph* graph);  /// PENDIENTE
@@ -286,6 +286,35 @@ void Graph::DelEdge(Node* pA, Node* pB)
     DelEdge( GetEdgePos( pA, pB ) );
 };
 
+bool Graph::IsItConnected()
+{
+    bool connected = false;
 
+    int connections = 0;
+    int connectedNodes = 0;
+
+    for(int pos = 0; pos < AmountOfNodes(); pos++)
+    {
+        Node* targetNode = nodeslist.GetItem(pos);
+        if ( targetNode->connections.GetSize() >= 1 )
+        {
+            connections += targetNode->connections.GetSize();
+            connectedNodes++;
+        };
+    };
+
+    if ( connectedNodes = nodeslist.GetSize() /// si todos los nodos estan conectados alguna vez
+         &&  edgeslist.GetSize() >= (nodeslist.GetSize() - 1) /// y la cantidad de aristas es >= a la cant de nodos - 1
+        )
+        connected = true;
+
+    return connected;
+};
+
+bool Graph::IsItMultiGraph()
+{
+    bool result = false;
+    if ( IsItConnected() ) result = false;
+}
 
 #endif // GRAPH_H_INCLUDED
