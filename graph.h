@@ -58,8 +58,8 @@ public:
     void DelEdge(Edge* target);
     void DelEdge(Node* pA, Node* pB);
 
-    bool IsItMultiGraph();          /// PENDIENTE
     bool IsItConnected();
+    bool IsItMultiGraph();          /// PENDIENTE
     bool IsItCyclical();            /// PENDIENTE
     Graph SplitGrapgh();            /// PENDIENTE
     void MergeGraph(Graph* graph);  /// PENDIENTE
@@ -314,7 +314,10 @@ bool Graph::IsItConnected()
 bool Graph::IsItMultiGraph()
 {
     bool result = false;
+
     if ( IsItConnected() ) result = false;
+
+
 }
 
 #endif // GRAPH_H_INCLUDED
