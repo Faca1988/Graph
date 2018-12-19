@@ -8,8 +8,8 @@ int main()
    Kruskal* k = new Kruskal();
 
    k->SetGraph();
-   k->LayoutNodes();
-   k->LayoutEdges();
+   //k->LayoutNodes();
+   //k->LayoutEdges();
    k->Resolve();
    k->LayoutSolution();
 

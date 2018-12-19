@@ -7,7 +7,7 @@ class Kruskal
 {
 private:
     Graph* graph;
-    List<Edge*> MST;
+    Graph* MST;
 
 public:
     Kruskal();
@@ -21,6 +21,7 @@ public:
 Kruskal::Kruskal()
 {
     graph = new Graph();
+    MST = new Graph();
 };
 
 void Kruskal::SetGraph()
@@ -98,17 +99,19 @@ void Kruskal::Resolve()
         peso = graph->GetEdge(pos)->weigth;
 
 
-        if ( MST.GetSize() <= 0) /// si la lista de solucion está vacia agrego la arista directamente
+        if ( MST->AmountOfEdges() <= 0) /// si la lista de solucion está vacia agrego la arista directamente
         {
-            Edge* edge = new Edge(origen,destino,peso);
-            MST.Insert(edge);
+            MST->NewNode(origen->label);
+            MST->NewNode(destino->label);
+            MST->NewEdge(origen->label, destino->label, peso);
+
         }
         else /// verificar si estan en la misma componente conexa
         {
             bool noConexo = true;
-            for (int pos = 0; pos < MST.GetSize(); pos++)
+            for (int pos = 0; pos < MST->AmountOfEdges(); pos++)
             {
-                Edge* actual = MST.GetItem(pos);
+                Edge* actual = MST->GetEdge(pos);
                 if ( actual->nodeA == origen || actual->nodeB == origen ||
                      actual->nodeA == destino || actual->nodeB == destino
                    )
@@ -123,13 +126,54 @@ void Kruskal::Resolve()
 
             if (noConexo)
             {
-                Edge* edge = new Edge(origen,destino,peso);
-                MST.Insert(edge);
+                MST->NewNode(origen->label);
+                MST->NewNode(destino->label);
+                MST->NewEdge(origen->label, destino->label, peso);
             }
             else
             {
-              /// agregar si no forma ciclo
+                /// agregar si no forma ciclo (NO SE REPITE OTRO VERTICE QUE EL INICIAL COMO FINAL)
+                Node* X = graph->GetNode( graph->GetNodePos(origen->label) );
+                Node* Y = graph->GetNode( graph->GetNodePos(destino->label) );
 
+                bool xNoEsta = true;
+                bool yNoEsta = true;
+
+                for (int pos = 0; pos < MST->AmountOfEdges(); pos++)
+                {
+                    Edge* cheked = MST->GetEdge(pos);
+
+                    if (cheked->nodeA->label == X->label || cheked->nodeB->label == X->label ) xNoEsta = xNoEsta*false;
+                    if (cheked->nodeA->label == Y->label || cheked->nodeB->label == Y->label ) yNoEsta = yNoEsta*false;
+                }
+
+                if ( xNoEsta )
+                {
+                    if ( yNoEsta )
+                    {
+                        /// como estan los dos nodos no puedo agregar la arista
+                        /// porque se forma ciclo
+                    }
+                    else
+                    {
+                        MST->NewNode(Y->label);
+                        MST->NewEdge(X->label, Y->label, peso);
+                    };
+                }
+                else
+                {
+                    if ( yNoEsta )
+                    {
+                        MST->NewNode(X->label);
+                        MST->NewEdge(X->label, Y->label, peso);
+                    }
+                    else
+                    {
+                        MST->NewNode(X->label);
+                        MST->NewNode(Y->label);
+                        MST->NewEdge(X->label, Y->label, peso);
+                    };
+                };
             };
         };
     };
@@ -138,16 +182,16 @@ void Kruskal::Resolve()
 void Kruskal::LayoutSolution()
 {
   int total = 0;
-  for (int idx = 0; idx < MST.GetSize(); idx++ )
+  for (int idx = 0; idx < MST->AmountOfEdges(); idx++ )
   {
-      Edge* actual = MST.GetItem(idx);
+      Edge* actual = MST->GetEdge(idx);
       total = total + actual->weigth;
   };
 
   cout << "Peso total: " << total << endl;
-  for (int pos = 0; pos < MST.GetSize(); pos++)
+  for (int pos = 0; pos < MST->AmountOfEdges(); pos++)
   {
-      Edge* actual = MST.GetItem(pos);
+      Edge* actual = MST->GetEdge(pos);
       cout << "(" << actual->nodeA->label << " ; " << actual->nodeB->label << ") : " << actual->weigth << endl;
   };
 };
