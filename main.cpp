@@ -59,14 +59,14 @@ int main()
 
 
     /// ================ EL GRAFO ES CONEXO? ======================
-    if (graph->IsItConnected())
+    /*if (graph->IsItConnected())
     {
         cout << "EL grafo es conexo" << endl;
     }
     else
     {
         cout << "EL grafo NO es conexo" << endl;
-    };
+    };*/
 
     /// MUESTRO LAS ARISTAS INGRESADAS EN LA LISTA DE CONEXIONES DEL NODO ELEGIDO
     cout << "Ingrese un nodo para ver sus conexiones:" << endl;
@@ -121,14 +121,14 @@ int main()
 
 
     /// ================ EL GRAFO ES CONEXO? ======================
-    if (graph->IsItConnected())
+    /*if (graph->IsItConnected())
     {
         cout << "EL grafo es conexo" << endl;
     }
     else
     {
         cout << "EL grafo NO es conexo" << endl;
-    };
+    };*/
 
 
 
@@ -186,14 +186,14 @@ int main()
 
 
     /// ================ EL GRAFO ES CONEXO? ======================
-    if (graph->IsItConnected())
+    /*if (graph->IsItConnected())
     {
         cout << "EL grafo es conexo" << endl;
     }
     else
     {
         cout << "EL grafo NO es conexo" << endl;
-    };
+    };*/
 
 
 

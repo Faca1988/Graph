@@ -1,6 +1,9 @@
 #ifndef GRAPH_H_INCLUDED
 #define GRAPH_H_INCLUDED
 
+#include <stack>
+#include <queue>
+#include <set>
 #include "list.h"
 
 struct Edge;
@@ -36,6 +39,11 @@ private:
     List<Node*> nodeslist;
     List<Edge*> edgeslist;
 
+    vector<bool> mark;
+    void DFS(int nodePos);
+    bool IsConnectedWithAll(Node* target);
+
+
 public:
     Graph();
 
@@ -58,12 +66,14 @@ public:
     void DelEdge(Edge* target);
     void DelEdge(Node* pA, Node* pB);
 
-    bool IsItConnected();
-    bool IsItMultiGraph();          /// PENDIENTE
+    bool IsItConnected();           /// Modificacion pendiente
+    bool IsItMultiGraph();          /// Esperando resolucion IsItConnected()
+    Graph SplitGraph();             /// Esperando resolucion IsItConnected()
     bool IsItCyclical();            /// PENDIENTE
-    Graph SplitGrapgh();            /// PENDIENTE
-    void MergeGraph(Graph* graph);  /// PENDIENTE
+    void MergeGraph(Graph* graph);
 
+    void SortEdgesAsc();
+    void SortEdgesDes();
 };
 
 Graph::Graph()
@@ -170,16 +180,6 @@ void Graph::NewEdge(Node* pA, Node* pB, int weight)
     Node* nodoX = nodeslist.GetItem( posX );
     Node* nodoY = nodeslist.GetItem( posY );
 
-    /*Edge* newEdge;
-    for(int pos = 0; pos < edgeslist.GetSize(); pos++)
-    {
-        Edge* target = edgeslist.GetItem(pos);
-        if ( (target->nodeA == nodoX && target->nodeB == nodoY) || (target->nodeA == nodoY && target->nodeB == nodoX) )
-        {
-            newEdge = target;
-        };
-    };*/
-
     nodoX->connections.Insert( edge );
     nodoY->connections.Insert( edge );
 };
@@ -211,7 +211,9 @@ int Graph::AmountOfEdges()
 
 Edge* Graph::GetEdge(int pos)
 {
-    return edgeslist.GetItem(pos);
+    Edge* result;
+    /*(pos == NULL) ? result = nullptr :*/ result = edgeslist.GetItem(pos);
+    return result;
 };
 
 int Graph::GetEdgePos(Edge* dirEdge)
@@ -230,12 +232,15 @@ int Graph::GetEdgePos(Edge* dirEdge)
 int Graph::GetEdgePos(Node* pA, Node* pB)
 {
     int target;
+    Edge* arista;
     for(int pos = 0; pos < AmountOfEdges(); pos++)
     {
+        arista = GetEdge(pos);
+
         if (
-            ( edgeslist.GetItem(pos)->nodeA == pA && edgeslist.GetItem(pos)->nodeB == pB )
-                                                  ||
-            ( edgeslist.GetItem(pos)->nodeA == pB && edgeslist.GetItem(pos)->nodeB == pA )
+            ( arista->nodeA == pA && arista->nodeB == pB )
+                                  ||
+            ( arista->nodeA == pB && arista->nodeB == pA )
            )
         {
             target = pos;
@@ -286,38 +291,166 @@ void Graph::DelEdge(Node* pA, Node* pB)
     DelEdge( GetEdgePos( pA, pB ) );
 };
 
+/*
 bool Graph::IsItConnected()
 {
-    bool connected = false;
+    Node* originNode = GetNode(0); /// DEFINO COMO ORIGEN EL PRIMER NODO DE LA LISTA DE NODOS
+    Node* targetNode = nullptr;
+    /// Node* originNode->previousNode = null
+    Node* currentNode = originNode;
+    bool allConnected = true;
+    List<Node*> visitedNodes;
 
-    int connections = 0;
-    int connectedNodes = 0;
-
-    for(int pos = 0; pos < AmountOfNodes(); pos++)
+    for (int index = 0; index < AmountOfNodes(); index++)
     {
-        Node* targetNode = nodeslist.GetItem(pos);
-        if ( targetNode->connections.GetSize() >= 1 )
-        {
-            connections += targetNode->connections.GetSize();
-            connectedNodes++;
-        };
-    };
+        targetNode = GetNode(index); ///nodes[index]
 
-    if ( connectedNodes = nodeslist.GetSize() /// si todos los nodos estan conectados alguna vez
-         &&  edgeslist.GetSize() >= (nodeslist.GetSize() - 1) /// y la cantidad de aristas es >= a la cant de nodos - 1
-        )
-        connected = true;
+        while( ( currentNode != null ) && ( currentNode != targetNode) )
+         {
+            Node* nextNode = nullptr;
+            visitedNodes.Insert(currentNode);
+            for (int idx = 0; idx < currentNode->connections.GetSize(), idx++)
+            {
 
-    return connected;
-};
+                Node* connectedNode;
+                /// De la conexion de currentNode en la que estoy tomo el nodo con el que se asocia y lo asigno a connectedNode
+                (currentNode->connections->GetItem(idx)->nodeA == currentNode)
+                    ? connectedNode = currentNode->connections->GetItem(idx)->nodeB
+                    : connectedNode = currentNode->connections->GetItem(idx)->nodeA;
 
+                bool exist = false;
+                for (int i = 0; i < visitedNodes.GetSize(); i++)
+                {
+                    if ( visitedNodes.GetItem(i) == connectedNode ) exist = true; /// si existe el connectedNode dentro de la lista de nodos visitados exist = true
+                }
+
+                if (!exist) /// si NO existe el connectedNode en la lista de visitados
+                {
+                    nextNode = connectedNode; /// el siguiente nodo (nextNode) es el connectedNode
+                    break;
+                }
+            }
+            if (nextNode == nullptr) /// si el siguiente nodo es nulo
+            {
+                currentNode = currentNode.previousNode
+            }
+            else /// si NO es nulo
+            {
+                previousNode = currentNode
+                currentNode = nextNode
+            }
+
+         }
+         if (currentNode == nullptr) /// si el currentNode es nulo quiere decir que no llegue al target
+         {
+            allConnected = false;
+            break;
+         }
+    }
+    return allConnected;
+}
+*/
 bool Graph::IsItMultiGraph()
 {
-    bool result = false;
+    bool result = true;
 
-    if ( IsItConnected() ) result = false;
+    /// if ( IsItConnected() ) result = false;
 
-
+    return result;
 }
 
+
+void Graph::SortEdgesAsc()
+{
+    for (int pos = 0; pos < AmountOfNodes(); pos++)
+    {
+        for (int rev = pos+1; rev < AmountOfEdges(); rev++)
+        {
+            if ( GetEdge(pos)->weigth > GetEdge(rev)->weigth )
+            {
+                Edge* mayor = GetEdge(pos);
+
+                GetEdge(pos)->nodeA = GetEdge(rev)->nodeA;
+                GetEdge(pos)->nodeB = GetEdge(rev)->nodeB;
+                GetEdge(pos)->weigth = GetEdge(rev)->weigth;
+
+                GetEdge(rev)->nodeA = mayor->nodeA;
+                GetEdge(rev)->nodeB = mayor->nodeB;
+                GetEdge(rev)->weigth = mayor->weigth;
+            };
+        };
+    };
+}
+
+void Graph::SortEdgesDes()
+{
+    for (int pos = 0; pos < AmountOfNodes(); pos++)
+    {
+        for (int rev = pos+1; rev < AmountOfEdges(); rev++)
+        {
+            if ( GetEdge(pos)->weigth < GetEdge(rev)->weigth )
+            {
+                Edge* menor = GetEdge(pos);
+
+                GetEdge(pos)->nodeA = GetEdge(rev)->nodeA;
+                GetEdge(pos)->nodeB = GetEdge(rev)->nodeB;
+                GetEdge(pos)->weigth = GetEdge(rev)->weigth;
+
+                GetEdge(rev)->nodeA = menor->nodeA;
+                GetEdge(rev)->nodeB = menor->nodeB;
+                GetEdge(rev)->weigth = menor->weigth;
+            };
+        };
+    };
+}
+
+void Graph::MergeGraph(Graph* graph)
+{
+    for(int posG = 0; posG < graph->AmountOfNodes(); posG++)
+    {
+        nodeslist.Insert(graph->GetNode(posG));
+    }
+    for (int posG = 0; posG < graph->AmountOfEdges(); posG++)
+    {
+        edgeslist.Insert(graph->GetEdge(posG));
+    }
+}
+
+Graph Graph::SplitGraph()
+{
+    cout << "Ingrese la cantidad de aristas a desconectar: ";
+    int cantAristas = 0;
+    cin >> cantAristas;
+    cout << endl;
+    for (int i = 0; i < cantAristas; i++)
+    {
+        string nodeX, nodeY;
+        cout << "Ingrese los nodos involucrados en la " << i <<"º arista a desconectar: ";
+        cin >> nodeX >> nodeY;
+
+        Node* A = GetNode( GetNodePos(nodeX) );
+        Node* B = GetNode( GetNodePos(nodeY) );
+
+        DelEdge(A,B); // int pos - Node* A, Node* b - Edge* e
+    }
+
+    Graph* graph = new Graph();
+    int exportedNodes = 0;
+    cout << "Ingrese la cantidad de nodos a exportar ";
+    cin >> exportedNodes;
+    cout << endl;
+
+    for (int i = 0; i < exportedNodes; i++)
+    {
+        string nodoExportado;
+        cout << "Nodo a exportar: " << endl;
+        cin >> nodoExportado;
+
+        graph->NewNode(nodoExportado);
+        DelNode( GetNodePos(nodoExportado) ); /// borra el nodo y sus conexiones con lo cual debo volver a cargar aristas despues. REVER CON IsItConnected()
+    }
+
+
+    return *graph;
+}
 #endif // GRAPH_H_INCLUDED
