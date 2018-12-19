@@ -1,9 +1,7 @@
 #ifndef GRAPH_H_INCLUDED
 #define GRAPH_H_INCLUDED
 
-#include <stack>
-#include <queue>
-#include <set>
+
 #include "list.h"
 
 struct Edge;
@@ -38,11 +36,6 @@ class Graph
 private:
     List<Node*> nodeslist;
     List<Edge*> edgeslist;
-
-    vector<bool> mark;
-    void DFS(int nodePos);
-    bool IsConnectedWithAll(Node* target);
-
 
 public:
     Graph();
